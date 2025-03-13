@@ -2,441 +2,953 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Carcará Health - Registro de Dados de Saúde</title>
-  <link rel="icon" type="image/png" href="https://png.pngtree.com/png-vector/20240531/ourmid/pngtree-bird-of-prey-with-a-yellow-beak-png-image_12588694.png">
-  <link rel="stylesheet" href="styles.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Caderneta Virtual do Idoso</title>
+  <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/1742/1742554.png">
   <style>
+    /* Estilos modernos */
     body {
-      font-family: 'Poppins', sans-serif;
-      text-align: center;
-      background: linear-gradient(135deg, #1E90FF, #FF4500);
-      color: white;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      overflow: hidden;
-    }
-    #app {
-      position: relative; /* Adicionado para posicionamento absoluto de elementos internos */
-      background: white;
-      color: #333;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      width: 90%;
-      max-width: 400px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      overflow: hidden;
-    }
-    .screen {
-      display: none;
-      opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 0.5s ease, transform 0.5s ease;
-    }
-    .active {
-      display: block;
-      opacity: 1;
-      transform: translateY(0);
-    }
-    button {
-      background: #FF4500;
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: 0.3s;
-      margin: 10px;
-    }
-    button:hover {
-      background: #D14000;
-      transform: scale(1.1);
-    }
-    .main-btn {
-      width: 100%;
-      font-size: 18px;
-      padding: 15px;
-      margin-top: 15px;
-    }
-    .export-btn {
-      margin-right: 20px;
-    }
-    input {
-      width: 90%;
-      padding: 10px;
-      margin: 10px 0;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-    .profile-btn {
-      background: transparent;
-      border: none;
-      font-size: 24px;
-      cursor: pointer;
-    }
-    .edit-profile-btn {
-      background: #FF4500;
-      color: white;
-      padding: 10px 20px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       font-size: 16px;
-      border-radius: 5px;
-      margin-left: 10px;
-      transition: 0.3s;
+      margin: 0;
+      padding: 0;
+      background-color: #f8f9fa;
+      color: #333;
     }
-    .edit-profile-btn:hover {
-      background: #D14000;
-      transform: scale(1.1);
+    .container {
+      max-width: 900px;
+      margin: 20px auto;
+      background: #fff;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+      border-radius: 12px;
+      position: relative; /* Adicionado para posicionar a imagem */
     }
-    .popup {
+    /* Tela inicial */
+    #homeScreen {
+      text-align: center;
+      padding: 50px 20px;
+      background: linear-gradient(135deg, #007bff, #00bfff);
+      color: #fff;
+      border-radius: 12px;
+      position: relative; /* Adicionado para posicionar a imagem */
+    }
+    #homeScreen h1 {
+      font-size: 36px;
+      margin-bottom: 10px;
+    }
+    #homeScreen h2 {
+      font-size: 24px;
+      margin-bottom: 30px;
+      font-weight: 400;
+    }
+    #homeScreen img {
+      width: 73.125px; /* 25% menor que 97.5px */
+      position: absolute; /* Posicionamento absoluto */
+      left: 20px; /* Distância da borda esquerda */
+      bottom: 20px; /* Distância da borda inferior */
+    }
+    #homeScreen button {
+      padding: 12px 20px;
+      border: none;
+      background: #28a745;
+      color: #fff;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      transition: background-color 0.3s;
+    }
+    #homeScreen button:hover {
+      background-color: #218838;
+    }
+    /* Abas */
+    .tabs {
+      display: flex;
+      overflow-x: auto;
+      padding: 0;
+      list-style: none;
+      border-bottom: 2px solid #e9ecef;
+      margin-bottom: 20px;
+    }
+    .tabs li {
+      text-align: center;
+      padding: 12px 20px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      background-color: #e9ecef;
+      border-radius: 8px 8px 0 0;
+      transition: all 0.3s ease;
+      flex-shrink: 0;
+      min-width: 120px;
+      margin-right: 8px;
+      color: #495057;
+    }
+    .tabs li.active {
+      background-color: #007bff;
+      color: white;
+      box-shadow: 0 4px 6px rgba(0, 123, 255, 0.2);
+    }
+    .tabs li:hover {
+      background-color: #0056b3;
+      color: white;
+    }
+    /* Conteúdo das abas */
+    .tab-content {
       display: none;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    /* Formulários */
+    form label {
+      display: block;
+      margin-top: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      color: #495057;
+    }
+    form input,
+    form select,
+    form textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 8px;
+      border: 1px solid #ced4da;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: border-color 0.3s ease;
+    }
+    form input:focus,
+    form select:focus,
+    form textarea:focus {
+      border-color: #007bff;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+    }
+    form textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+    /* Botões */
+    .btn {
+      margin-top: 20px;
+      padding: 12px 20px;
+      border: none;
+      background: #28a745;
+      color: #fff;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      transition: background-color 0.3s;
+      width: 100%;
+      max-width: 200px;
+    }
+    .btn:hover {
+      background-color: #218838;
+    }
+    #addMedicamento, #addVacina {
+      background: #17a2b8;
+      width: 100%;
+      max-width: 200px;
+    }
+    #addMedicamento:hover, #addVacina:hover {
+      background: #117a8b;
+    }
+    /* Botão de Monitoramento */
+    #monitoramentoBtn {
+      background-color: #ffc107; /* Amarelo */
+      color: #333;
+    }
+    #monitoramentoBtn:hover {
+      background-color: #e0a800; /* Amarelo escuro */
+    }
+    /* Popup de confirmação */
+    .popup {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #28a745;
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 16px;
+      opacity: 0;
+      transition: opacity 0.5s;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    .popup.show {
+      opacity: 1;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    /* Responsividade */
+    @media(max-width: 600px) {
+      .tabs li {
+        font-size: 14px;
+        padding: 10px 15px;
+        min-width: 100px;
+      }
+      button, form input, form select, form textarea {
+        font-size: 14px;
+        padding: 8px;
+      }
+      form label {
+        font-size: 14px;
+      }
+      .review-buttons {
+        flex-direction: column;
+        gap: 10px;
+      }
+      .review-buttons .btn {
+        max-width: 100%;
+        width: 100%;
+      }
+    }
+    .review-buttons {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      margin-top: 20px;
+    }
+    /* Estilos do Modal de Monitoramento */
+    #monitoramentoOverlay {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
       background: rgba(0, 0, 0, 0.5);
-      justify-content: center;
-      align-items: center;
-      opacity: 0;
-      transition: opacity 0.5s ease;
+      display: none;
+      z-index: 900;
     }
-    .popup-content {
-      background: white;
+    #monitoramentoScreen {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #fff;
       padding: 20px;
-      border-radius: 10px;
+      border-radius: 12px;
+      z-index: 1000;
+      display: none;
+      width: 90%;
       max-width: 400px;
-      width: 100%;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
-    .emergency-btn {
-      background-color: #FF0000;
-      color: white;
-      padding: 12px 24px;
-      font-size: 18px;
-      border-radius: 5px;
-      transition: 0.3s;
+    #monitoramentoScreen h3 {
+      margin-top: 0;
+      color: #333;
     }
-    .emergency-btn:hover {
-      background-color: #D10000;
-      transform: scale(1.1);
-    }
-    /* Container de botões */
-    .buttons-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-    }
-    /* Layout dos botões de emergência e editar perfil */
-    .action-buttons {
-      display: flex;
-      justify-content: center;
-      margin-top: 20px;
-      width: 100%;
-    }
-    /* Estilos para a frase informativa */
-    .info-text {
-      font-size: 14px;
-      color: #555;
+    #monitoramentoScreen button {
       margin-top: 10px;
-      line-height: 1.5;
+      width: 48%;
     }
-    @media (max-width: 600px) {
-      #app {
-        width: 100%;
-      }
+    /* Estilos para o formulário de vacinação */
+    .vacina-form {
+      border: 1px solid #e9ecef;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      background-color: #f8f9fa;
     }
-    /* Barra de rolagem para a lista de aferições na tela "Histórico de Aferições" */
-    #historyList {
-      max-height: 300px;
-      overflow-y: auto;
+    .vacina-form .form-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .vacina-form .form-row label {
+      flex: 1;
+    }
+    .vacina-form .form-row input,
+    .vacina-form .form-row textarea {
+      flex: 2;
+    }
+    .vacina-form .delete-btn {
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      margin-top: 10px;
+      transition: background-color 0.3s;
+    }
+    .vacina-form .delete-btn:hover {
+      background-color: #c82333;
+    }
+    /* Containers para o resumo dos dados salvos */
+    .review-container {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+    .review-container h3 {
+      margin-top: 0;
+      color: #007bff;
+    }
+    /* Botão de alarme com ícone de relógio */
+    .alarm-btn {
+      background-color: #ffc107;
+      color: #333;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 15px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .alarm-btn:hover {
+      background-color: #e0a800;
+    }
+    .alarm-btn i {
+      font-size: 18px;
+    }
+    /* Estilos para o formulário de medicamentos */
+    .medicamento-form {
+      border: 1px solid #e9ecef;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      background-color: #f8f9fa;
+    }
+    .medicamento-form .delete-btn {
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      margin-top: 10px;
+      transition: background-color 0.3s;
+    }
+    .medicamento-form .delete-btn:hover {
+      background-color: #c82333;
     }
   </style>
+  <!-- Ícones do FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-  <div id="app">
-    <!-- Imagem adicionada no canto superior direito (tamanho reduzido) -->
-    <img src="https://logowik.com/content/uploads/images/colored-beta4114.logowik.com.webp" alt="Logo" style="position: absolute; top: 10px; right: 10px; height: 40px; width: auto;">
-    
-    <div id="home" class="screen active">
-      <h1>
-        <img src="https://png.pngtree.com/png-vector/20240531/ourmid/pngtree-bird-of-prey-with-a-yellow-beak-png-image_12588694.png" alt="Ícone Carcará Health" style="vertical-align: middle; height: 50px; margin-right: 10px;">
-        Carcará Health
-      </h1>
-      <p>Feito por acadêmicos de medicina do grupo B de Inovação e Tecnologia em Saúde |FUNORTE 2025.1</p>
-      <!-- Container para centralizar os botões -->
-      <div class="buttons-container">
-        <button class="main-btn" onclick="showScreen('healthData')">Começar</button>
-        <button class="main-btn" onclick="showHistory()">Histórico de Aferições</button>
-        <button class="main-btn" onclick="showAboutPopup()">Sobre</button>
+  <!-- Tela inicial -->
+  <div id="homeScreen" class="container">
+    <h1>Caderneta Virtual do Idoso</h1>
+    <h2>Cuidar hoje para viver melhor amanhã! - Grupo D Inovação e Tecnologia em Saúde FUNORTE 2025.1</h2>
+    <img src="https://cdn-icons-png.flaticon.com/512/1742/1742554.png" alt="Logo">
+    <button id="startBtn">Iniciar</button>
+  </div>
+
+  <!-- Tela de Edição -->
+  <div id="editScreen" class="container" style="display: none;">
+    <!-- Menu de abas -->
+    <ul class="tabs">
+      <li class="tab active" data-tab="identificacao">Identificação</li>
+      <li class="tab" data-tab="vacinacao">Vacinação</li>
+      <li class="tab" data-tab="doencas">Doenças Crônicas</li>
+      <li class="tab" data-tab="medicamentos">Medicamentos</li>
+      <li class="tab" data-tab="recomendacoes">Anotações</li>
+    </ul>
+
+    <!-- Conteúdo das abas -->
+    <div class="tab-content active" id="identificacao">
+      <form id="form-identificacao">
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" name="nome">
+        <label for="dataNascimento">Data de Nascimento:</label>
+        <input type="date" id="dataNascimento" name="dataNascimento">
+        <label for="peso">Peso (kg):</label>
+        <input type="number" id="peso" name="peso">
+        <label for="contato">Contato:</label>
+        <input type="tel" id="contato" name="contato">
+        <label for="contatoEmergencia">Contato de Emergência:</label>
+        <input type="tel" id="contatoEmergencia" name="contatoEmergencia">
+      </form>
+    </div>
+
+    <div class="tab-content" id="vacinacao">
+      <div id="vacinasContainer">
+        <!-- Formulário inicial para uma vacina -->
+        <div class="vacina-form">
+          <div class="form-row">
+            <label for="nomeVacina">Nome da Vacina:</label>
+            <input type="text" class="nomeVacina" name="nomeVacina[]">
+          </div>
+          <div class="form-row">
+            <label for="dataAplicacao">Data de Aplicação:</label>
+            <input type="date" class="dataAplicacao" name="dataAplicacao[]">
+          </div>
+          <div class="form-row">
+            <label for="loteVacina">Lote:</label>
+            <input type="text" class="loteVacina" name="loteVacina[]">
+          </div>
+          <div class="form-row">
+            <label for="observacoesVacina">Observações:</label>
+            <textarea class="observacoesVacina" name="observacoesVacina[]"></textarea>
+          </div>
+          <button type="button" class="delete-btn" onclick="deleteVacinaForm(this)">Excluir Vacina</button>
+        </div>
       </div>
-      <!-- Contêiner para os botões de emergência e editar perfil -->
-      <div class="action-buttons">
-        <a href="tel:192">
-          <button class="emergency-btn">EMERGÊNCIA</button>
-        </a>
-        <button class="edit-profile-btn" onclick="showScreen('profile')">Editar Perfil</button>
-      </div>
+      <button type="button" id="addVacina" class="btn">Adicionar Vacina</button>
     </div>
 
-    <div id="healthData" class="screen">
-      <h2>Registrar Dados de Saúde</h2>
-      <input type="number" id="glucose" placeholder="Glicose (mg/dL)" required>
-      <input type="number" id="systolic" placeholder="Pressão Sistólica (mmHg)" required>
-      <input type="number" id="diastolic" placeholder="Pressão Diastólica (mmHg)" required>
-      <button onclick="saveHealthData()">Registrar</button>
-      <button class="back-btn" onclick="showScreen('home')">Voltar</button>
+    <div class="tab-content" id="doencas">
+      <form id="form-doencas">
+        <label><input type="checkbox" id="hipertensao" name="hipertensao"> Hipertensão</label>
+        <label><input type="checkbox" id="diabetes" name="diabetes"> Diabetes</label>
+        <label><input type="checkbox" id="cardiopatias" name="cardiopatias"> Cardiopatias</label>
+        <label><input type="checkbox" id="chagas" name="chagas"> Chagas</label>
+        <label for="outrasDoencas">Outras Doenças/Alergias:</label>
+        <input type="text" id="outrasDoencas" name="outrasDoencas">
+      </form>
     </div>
 
-    <div id="viewData" class="screen">
-      <h2>Dados Registrados</h2>
-      <ul id="dataList"></ul>
-      <button class="export-btn" onclick="exportToPDF()">Exportar PDF</button>
-      <button class="back-btn" onclick="showScreen('healthData')">Voltar</button>
+    <div class="tab-content" id="medicamentos">
+      <form id="form-medicamentos">
+        <div id="medicamentosContainer">
+          <!-- Bloco inicial de medicamento -->
+          <div class="medicamento-form">
+            <label>Nome do Medicamento:</label>
+            <input type="text" name="nomeMedicamento[]">
+            <label>Dose:</label>
+            <input type="text" name="doseMedicamento[]">
+            <label>Posologia:</label>
+            <input type="text" name="posologiaMedicamento[]">
+            <label>Horário:</label>
+            <input type="time" name="horarioMedicamento[]">
+            <button type="button" class="delete-btn" onclick="deleteMedicamentoForm(this)">Excluir Medicamento</button>
+          </div>
+        </div>
+        <button type="button" id="addMedicamento" class="btn">Adicionar Medicamento</button>
+      </form>
     </div>
 
-    <div id="profile" class="screen">
-      <h2>Perfil do Usuário</h2>
-      <input type="text" id="profileName" placeholder="Nome" required>
-      <input type="date" id="profileDob" required>
-      <input type="text" id="profileSus" placeholder="Número do Cartão SUS" required>
-      <!-- Campo de Email -->
-      <input type="email" id="profileEmail" placeholder="Email" required>
-      <!-- Frase informativa -->
-      <p class="info-text">Preencha o campo e-mail se deseja receber informações sobre saúde e bem-estar.</p>
-      <button onclick="saveProfileData()">Salvar Alterações</button>
-      <button onclick="showScreen('home')">Voltar</button>
+    <div class="tab-content" id="recomendacoes">
+      <form id="form-recomendacoes">
+        <label for="anotacoes">Anotações Médicas:</label>
+        <textarea id="anotacoes" name="anotacoes"></textarea>
+      </form>
     </div>
 
-    <div id="historyPopup" class="popup">
-      <div class="popup-content">
-        <h3>Histórico de Aferições</h3>
-        <ul id="historyList"></ul>
-        <button onclick="exportHistoryToPDF()">Exportar Histórico</button>
-        <button onclick="clearHistory()">Excluir Histórico</button>
-        <button onclick="closeHistoryPopup()">Fechar</button>
-      </div>
-    </div>
+    <!-- Botão Salvar Dados -->
+    <button id="saveBtn" class="btn">Salvar Dados</button>
 
-    <div id="profilePopup" class="popup">
-      <div class="popup-content">
-        <h3>Editar Perfil</h3>
-        <input type="text" id="popupName" placeholder="Nome Completo" required>
-        <input type="date" id="popupDob" required>
-        <input type="text" id="popupSus" placeholder="Número do Cartão SUS" required>
-        <!-- Campo de Email -->
-        <input type="email" id="popupEmail" placeholder="Email" required>
-        <button onclick="saveProfilePopupData()">Salvar Alterações</button>
-        <button onclick="closeProfilePopup()">Fechar</button>
-      </div>
-    </div>
+    <!-- Popup de confirmação -->
+    <div id="popup" class="popup">Dados salvos com sucesso!</div>
+  </div>
 
-    <div id="aboutPopup" class="popup">
-      <div class="popup-content">
-        <h3>Sobre o Carcará Health</h3>
-        <p>Este aplicativo foi desenvolvido por:</p>
-        <ul>
-          <li>Daiane Cavalcanti</li>
-          <li>Farley Eleandro</li>
-          <li>Fernanda Santos</li>
-          <li>Maria Cecília</li>
-          <li>Maria Fernanda</li>
-          <li>Maria Helena</li>
-          <li>Marcela Alencar</li>
-          <li>Ian Bastos</li>
-          <li>Ingrid Barbosa</li>
-          <li>Lara Regine</li>
-        </ul>
-        <button onclick="closeAboutPopup()">Fechar</button>
-      </div>
+  <!-- Tela de Revisão (visualização somente) -->
+  <div id="reviewScreen" class="container" style="display: none;">
+    <h2>Dados do Idoso</h2> <!-- Alteração do nome da tela -->
+    <div class="review-container">
+      <h3>Identificação</h3>
+      <div id="reviewIdentificacao"></div>
+    </div>
+    <div class="review-container">
+      <h3>Vacinação</h3>
+      <div id="reviewVacinacao"></div>
+    </div>
+    <div class="review-container">
+      <h3>Doenças Crônicas e Alergias</h3>
+      <div id="reviewDoencas"></div>
+    </div>
+    <div class="review-container">
+      <h3>Medicamentos em Uso</h3>
+      <div id="reviewMedicamentos"></div>
+      <!-- Botão de alarme com ícone de relógio -->
+      <button class="alarm-btn" onclick="setMedicationAlarm()">
+        <i class="fas fa-clock"></i>
+        Definir alarme para medicações
+      </button>
+    </div>
+    <div class="review-container">
+      <h3>Mapeamento de PA e Glicemia</h3>
+      <div id="reviewMonitoramento"></div>
+    </div>
+    <div class="review-container">
+      <h3>Recomendações/Anotações Médicas</h3>
+      <div id="reviewAnotacoes"></div>
+    </div>
+    <div class="review-buttons">
+      <button id="exportBtn" class="btn">Exportar</button>
+      <button id="monitoramentoBtn" class="btn">Monitoramento</button>
+      <button id="editBtn" class="btn">Editar</button>
+      <button id="deleteAllBtn" class="btn">Excluir todos os dados</button>
     </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <!-- Modal de Monitoramento (PA e Glicemia) -->
+  <div id="monitoramentoOverlay"></div>
+  <div id="monitoramentoScreen">
+    <h3>Mapeamento de PA e Glicemia</h3>
+    <form id="form-monitoramento">
+      <label for="paMonitor">Pressão Arterial (PA):</label>
+      <input type="text" id="paMonitor" name="paMonitor" placeholder="ex: 120/80">
+      <label for="glicemiaMonitor">Glicemia:</label>
+      <input type="number" id="glicemiaMonitor" name="glicemiaMonitor">
+      <div style="display: flex; justify-content: space-between;">
+        <button type="button" id="saveMonitorBtn" class="btn">Salvar Monitoramento</button>
+        <button type="button" id="closeMonitorBtn" class="btn">Fechar</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- jsPDF (para gerar o PDF) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://unpkg.com/@phosphor-icons/web"></script>
-  <script src="script.js"></script>
   <script>
-    // Função auxiliar para recuperar os dados do usuário
-    function getUserProfileData() {
-      const userProfile = JSON.parse(localStorage.getItem('userProfile'));
-      return {
-        name: userProfile && userProfile.name ? userProfile.name : (document.getElementById('profileName').value || 'Nome não informado'),
-        dob: userProfile && userProfile.dob ? userProfile.dob : (document.getElementById('profileDob').value || 'Data de nascimento não informada'),
-        sus: userProfile && userProfile.sus ? userProfile.sus : (document.getElementById('profileSus').value || 'Número do SUS não informado'),
-        email: userProfile && userProfile.email ? userProfile.email : (document.getElementById('profileEmail').value || 'Email não informado')
-      };
-    }
-
-    function showScreen(screenId) {
-      if (screenId === 'profile') {
-        loadUserProfile();
-      } else if (screenId === 'viewData') {
-        loadHealthDataHistory();
-      }
-      document.querySelectorAll('.screen').forEach(screen => {
-        screen.classList.remove('active');
+    // Lógica das abas
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById(tab.getAttribute('data-tab')).classList.add('active');
       });
-      document.getElementById(screenId).classList.add('active');
-    }
+    });
 
-    function saveHealthData() {
-      const glucose = parseFloat(document.getElementById('glucose').value);
-      const systolic = parseFloat(document.getElementById('systolic').value);
-      const diastolic = parseFloat(document.getElementById('diastolic').value);
-      const dateTime = new Date().toLocaleString();
-      let alertMessage = '';
-      if (glucose > 140 || systolic > 130 || diastolic > 90) {
-        alertMessage = 'Valores acima do normal!';
-      }
-      const entry = `${dateTime} - Glicose: ${glucose} mg/dL, Pressão: ${systolic}/${diastolic} mmHg <span style="color:red">${alertMessage}</span>`;
-      document.getElementById('dataList').innerHTML += `<li>${entry}</li>`;
-      document.getElementById('historyList').innerHTML += `<li>${entry}</li>`;
-      let healthDataHistory = JSON.parse(localStorage.getItem('healthDataHistory')) || [];
-      healthDataHistory.push(entry);
-      localStorage.setItem('healthDataHistory', JSON.stringify(healthDataHistory));
-      Swal.fire('Registro salvo!', '', 'success');
-      showScreen('viewData');
-    }
+    // Adicionar medicamento dinamicamente (novo bloco com campo "Horário")
+    document.getElementById('addMedicamento').addEventListener('click', () => {
+      const container = document.getElementById('medicamentosContainer');
+      const newBlock = document.createElement('div');
+      newBlock.classList.add('medicamento-form');
+      newBlock.innerHTML = `
+        <label>Nome do Medicamento:</label>
+        <input type="text" name="nomeMedicamento[]">
+        <label>Dose:</label>
+        <input type="text" name="doseMedicamento[]">
+        <label>Posologia:</label>
+        <input type="text" name="posologiaMedicamento[]">
+        <label>Horário:</label>
+        <input type="time" name="horarioMedicamento[]">
+        <button type="button" class="delete-btn" onclick="deleteMedicamentoForm(this)">Excluir Medicamento</button>
+      `;
+      container.appendChild(newBlock);
+    });
 
-    function saveProfileData() {
-      const name = document.getElementById('profileName').value;
-      const dob = document.getElementById('profileDob').value;
-      const sus = document.getElementById('profileSus').value;
-      const email = document.getElementById('profileEmail').value;
-      const userProfile = { name, dob, sus, email };
-      localStorage.setItem('userProfile', JSON.stringify(userProfile));
-      Swal.fire('Alterações salvas com sucesso!', '', 'success');
-      showScreen('profile');
-    }
-
-    function showHistory() {
-      loadHealthDataHistory();
-      document.getElementById('historyPopup').style.display = 'flex';
-      document.getElementById('historyPopup').style.opacity = '1';
-    }
-
-    function closeHistoryPopup() {
-      document.getElementById('historyPopup').style.opacity = '0';
-      setTimeout(() => {
-        document.getElementById('historyPopup').style.display = 'none';
-      }, 500);
-    }
-
-    // Gera PDF com cabeçalho contendo os dados do usuário e os dados de aferição
-    function exportToPDF() {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
-      const userData = getUserProfileData();
-      doc.setFontSize(12);
-      doc.text(`Nome: ${userData.name}`, 10, 10);
-      doc.text(`Data de Nascimento: ${userData.dob}`, 10, 15);
-      doc.text(`Número SUS: ${userData.sus}`, 10, 20);
-      doc.text(`Email: ${userData.email}`, 10, 25);
-      doc.text('Dados de Aferições', 10, 35);
-      let content = '';
-      document.querySelectorAll('#dataList li').forEach(item => {
-        content += item.innerText + '\n';
-      });
-      doc.setFontSize(10);
-      doc.text(content, 10, 40);
-      doc.save('dados_saude.pdf');
-      Swal.fire('PDF gerado com sucesso!', '', 'success');
-    }
-
-    // Gera PDF (exportação do histórico) com cabeçalho contendo os dados do usuário
-    function exportHistoryToPDF() {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
-      const userData = getUserProfileData();
-      doc.setFontSize(12);
-      doc.text(`Nome: ${userData.name}`, 10, 10);
-      doc.text(`Data de Nascimento: ${userData.dob}`, 10, 15);
-      doc.text(`Número SUS: ${userData.sus}`, 10, 20);
-      doc.text(`Email: ${userData.email}`, 10, 25);
-      doc.text('Dados de Aferições', 10, 35);
-      let content = '';
-      document.querySelectorAll('#historyList li').forEach(item => {
-        content += item.innerText + '\n';
-      });
-      doc.setFontSize(10);
-      doc.text(content, 10, 40);
-      doc.save('historico_afericoes.pdf');
-      Swal.fire('Histórico gerado com sucesso!', '', 'success');
-    }
-
-    function showAboutPopup() {
-      document.getElementById('aboutPopup').style.display = 'flex';
-      document.getElementById('aboutPopup').style.opacity = '1';
-    }
-
-    function closeAboutPopup() {
-      document.getElementById('aboutPopup').style.opacity = '0';
-      setTimeout(() => {
-        document.getElementById('aboutPopup').style.display = 'none';
-      }, 500);
-    }
-
-    function showProfilePopup() {
-      document.getElementById('profilePopup').style.display = 'flex';
-      document.getElementById('profilePopup').style.opacity = '1';
-    }
-
-    function closeProfilePopup() {
-      document.getElementById('profilePopup').style.opacity = '0';
-      setTimeout(() => {
-        document.getElementById('profilePopup').style.display = 'none';
-      }, 500);
-    }
-
-    function loadHealthDataHistory() {
-      const healthDataHistory = JSON.parse(localStorage.getItem('healthDataHistory')) || [];
-      document.getElementById('dataList').innerHTML = '';
-      document.getElementById('historyList').innerHTML = '';
-      healthDataHistory.forEach(entry => {
-        document.getElementById('dataList').innerHTML += `<li>${entry}</li>`;
-        document.getElementById('historyList').innerHTML += `<li>${entry}</li>`;
-      });
-    }
-
-    function loadUserProfile() {
-      const userProfile = JSON.parse(localStorage.getItem('userProfile'));
-      if (userProfile) {
-        document.getElementById('profileName').value = userProfile.name;
-        document.getElementById('profileDob').value = userProfile.dob;
-        document.getElementById('profileSus').value = userProfile.sus;
-        document.getElementById('profileEmail').value = userProfile.email;
+    // Função para excluir um formulário de medicamento
+    function deleteMedicamentoForm(button) {
+      if (confirm("Tem certeza que deseja excluir este medicamento?")) {
+        const form = button.closest('.medicamento-form');
+        form.remove();
       }
     }
 
-    function clearHistory() {
-      Swal.fire({
-        title: 'Tem certeza?',
-        text: 'Isso excluirá todo o histórico de aferições!',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Sim, excluir!',
-        cancelButtonText: 'Cancelar'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          localStorage.removeItem('healthDataHistory');
-          document.getElementById('dataList').innerHTML = '';
-          document.getElementById('historyList').innerHTML = '';
-          Swal.fire('Histórico excluído!', '', 'success');
+    // Adicionar vacina dinamicamente
+    document.getElementById('addVacina').addEventListener('click', () => {
+      const container = document.getElementById('vacinasContainer');
+      const newBlock = document.createElement('div');
+      newBlock.classList.add('vacina-form');
+      newBlock.innerHTML = `
+        <div class="form-row">
+          <label for="nomeVacina">Nome da Vacina:</label>
+          <input type="text" class="nomeVacina" name="nomeVacina[]">
+        </div>
+        <div class="form-row">
+          <label for="dataAplicacao">Data de Aplicação:</label>
+          <input type="date" class="dataAplicacao" name="dataAplicacao[]">
+        </div>
+        <div class="form-row">
+          <label for="loteVacina">Lote:</label>
+          <input type="text" class="loteVacina" name="loteVacina[]">
+        </div>
+        <div class="form-row">
+          <label for="observacoesVacina">Observações:</label>
+          <textarea class="observacoesVacina" name="observacoesVacina[]"></textarea>
+        </div>
+        <button type="button" class="delete-btn" onclick="deleteVacinaForm(this)">Excluir Vacina</button>
+      `;
+      container.appendChild(newBlock);
+    });
+
+    // Função para excluir um formulário de vacina
+    function deleteVacinaForm(button) {
+      if (confirm("Tem certeza que deseja excluir esta vacina?")) {
+        const form = button.closest('.vacina-form');
+        form.remove();
+      }
+    }
+
+    // Função para definir alarme com base nos horários dos medicamentos
+    function setMedicationAlarm() {
+      const savedData = JSON.parse(localStorage.getItem('formData'));
+      if (!savedData || !savedData.medicamentos || savedData.medicamentos.length === 0) {
+        alert("Nenhum medicamento cadastrado.");
+        return;
+      }
+
+      const medicationTimes = savedData.medicamentos.map(med => med.horario);
+      const uniqueTimes = [...new Set(medicationTimes)]; // Remove horários duplicados
+
+      uniqueTimes.forEach(time => {
+        const [hours, minutes] = time.split(':');
+        const now = new Date();
+        const alarmTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
+
+        if (alarmTime > now) {
+          const timeout = alarmTime - now;
+          setTimeout(() => {
+            alert(`Hora de tomar o medicamento! Horário: ${time}`);
+          }, timeout);
         }
       });
+
+      alert("Alarmes configurados com sucesso!");
     }
 
-    window.onload = function() {
-      loadHealthDataHistory();
-      loadUserProfile();
-    };
+    // Atualiza a tela de revisão com os dados salvos, incluindo o monitoramento
+    function updateReviewScreen() {
+      const savedData = JSON.parse(localStorage.getItem('formData'));
+      if (savedData) {
+        let identificacao = `<p><strong>Nome:</strong> ${savedData.nome}</p>
+          <p><strong>Data de Nascimento:</strong> ${savedData.dataNascimento}</p>
+          <p><strong>Peso (kg):</strong> ${savedData.peso}</p>
+          <p><strong>Contato:</strong> ${savedData.contato}</p>
+          <p><strong>Contato de Emergência:</strong> ${savedData.contatoEmergencia}</p>`;
+        document.getElementById('reviewIdentificacao').innerHTML = identificacao;
+
+        let vacinacao = '';
+        if (savedData.vacinas && savedData.vacinas.length > 0) {
+          savedData.vacinas.forEach((vacina, index) => {
+            vacinacao += `<p><strong>Vacina ${index+1}:</strong></p>
+              <p><strong>Nome:</strong> ${vacina.nome}</p>
+              <p><strong>Data de Aplicação:</strong> ${vacina.dataAplicacao}</p>
+              <p><strong>Lote:</strong> ${vacina.lote}</p>
+              <p><strong>Observações:</strong> ${vacina.observacoes}</p>`;
+          });
+        } else {
+          vacinacao += `<p>Nenhuma vacina registrada.</p>`;
+        }
+        document.getElementById('reviewVacinacao').innerHTML = vacinacao;
+
+        let doencas = `<p><strong>Hipertensão:</strong> ${savedData.doenças && savedData.doenças.hipertensao ? 'Sim' : 'Não'}</p>
+          <p><strong>Diabetes:</strong> ${savedData.doenças && savedData.doenças.diabetes ? 'Sim' : 'Não'}</p>
+          <p><strong>Cardiopatias:</strong> ${savedData.doenças && savedData.doenças.cardiopatias ? 'Sim' : 'Não'}</p>
+          <p><strong>Chagas:</strong> ${savedData.doenças && savedData.doenças.chagas ? 'Sim' : 'Não'}</p>
+          <p><strong>Outras Doenças/Alergias:</strong> ${savedData.doenças ? savedData.doenças.outrasDoencas : ''}</p>`;
+        document.getElementById('reviewDoencas').innerHTML = doencas;
+
+        let medicamentos = '';
+        savedData.medicamentos.forEach((med, index) => {
+          medicamentos += `<p><strong>Medicamento ${index+1}:</strong></p>
+            <p><strong>Nome:</strong> ${med.nome}</p>
+            <p><strong>Dose:</strong> ${med.dose}</p>
+            <p><strong>Posologia:</strong> ${med.posologia}</p>
+            <p><strong>Horário:</strong> ${med.horario}</p>`;
+        });
+        document.getElementById('reviewMedicamentos').innerHTML = medicamentos;
+
+        let monitoramento = '';
+        if (savedData.monitoramento && savedData.monitoramento.length > 0) {
+          savedData.monitoramento.forEach((measurement, index) => {
+            monitoramento += `<p><strong>Aferição ${index+1}:</strong> ${measurement.datetime} - PA: ${measurement.pa} | Glicemia: ${measurement.glicemia}</p>`;
+          });
+        } else {
+          monitoramento += `<p>Nenhuma aferição registrada.</p>`;
+        }
+        document.getElementById('reviewMonitoramento').innerHTML = monitoramento;
+
+        let anotacoes = `<p>${savedData.anotacoes}</p>`;
+        document.getElementById('reviewAnotacoes').innerHTML = anotacoes;
+      }
+    }
+
+    // Ao salvar, armazena os dados (exceto os novos monitoramentos) e navega para a tela de revisão
+    document.getElementById('saveBtn').addEventListener('click', () => {
+      const formData = {
+        nome: document.getElementById('nome').value,
+        dataNascimento: document.getElementById('dataNascimento').value,
+        peso: document.getElementById('peso').value,
+        contato: document.getElementById('contato').value,
+        contatoEmergencia: document.getElementById('contatoEmergencia').value,
+        vacinas: Array.from(document.querySelectorAll('.vacina-form')).map(form => ({
+          nome: form.querySelector('.nomeVacina').value,
+          dataAplicacao: form.querySelector('.dataAplicacao').value,
+          lote: form.querySelector('.loteVacina').value,
+          observacoes: form.querySelector('.observacoesVacina').value
+        })),
+        doenças: {
+          hipertensao: document.getElementById('hipertensao').checked,
+          diabetes: document.getElementById('diabetes').checked,
+          cardiopatias: document.getElementById('cardiopatias').checked,
+          chagas: document.getElementById('chagas').checked,
+          outrasDoencas: document.getElementById('outrasDoencas').value
+        },
+        medicamentos: Array.from(document.querySelectorAll('input[name="nomeMedicamento[]"]')).map((input, index) => ({
+          nome: input.value,
+          dose: document.querySelectorAll('input[name="doseMedicamento[]"]')[index].value,
+          posologia: document.querySelectorAll('input[name="posologiaMedicamento[]"]')[index].value,
+          horario: document.querySelectorAll('input[name="horarioMedicamento[]"]')[index].value,
+        })),
+        anotacoes: document.getElementById('anotacoes').value
+      };
+
+      // Preserva os monitoramentos já registrados, se houver
+      const existingData = JSON.parse(localStorage.getItem('formData'));
+      if (existingData && existingData.monitoramento) {
+        formData.monitoramento = existingData.monitoramento;
+      } else {
+        formData.monitoramento = [];
+      }
+      
+      localStorage.setItem('formData', JSON.stringify(formData));
+      
+      // Exibe popup de confirmação
+      const popup = document.getElementById('popup');
+      popup.textContent = "Dados salvos com sucesso!";
+      popup.classList.add('show');
+      setTimeout(() => popup.classList.remove('show'), 3000);
+      
+      // Atualiza a tela de revisão e navega para ela
+      updateReviewScreen();
+      document.getElementById('editScreen').style.display = 'none';
+      document.getElementById('reviewScreen').style.display = 'block';
+    });
+
+    // Botão "Editar" - volta para a tela de edição
+    document.getElementById('editBtn').addEventListener('click', () => {
+      document.getElementById('reviewScreen').style.display = 'none';
+      document.getElementById('editScreen').style.display = 'block';
+    });
+
+    // Botão "Exportar" - gera o PDF com os dados salvos (incluindo os monitoramentos)
+    document.getElementById('exportBtn').addEventListener('click', () => {
+      const savedData = JSON.parse(localStorage.getItem('formData'));
+      if (!savedData) return;
+      
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      let y = 10;
+      
+      // Cabeçalho com identificação do paciente e data/hora
+      const currentDate = new Date().toLocaleString('pt-BR');
+      doc.setFontSize(14); // Fonte menor
+      doc.text(`Paciente: ${savedData.nome}`, 10, y);
+      y += 10;
+      doc.setFontSize(12); // Fonte menor
+      doc.text(`Data e Hora de Criação: ${currentDate}`, 10, y);
+      y += 10;
+      
+      // Adiciona a logo no canto superior direito
+      const logoUrl = 'https://cdn-icons-png.flaticon.com/512/1742/1742554.png';
+      doc.addImage(logoUrl, 'PNG', 160, 10, 30, 30);
+      
+      let lines = [];
+      lines.push("Identificação:");
+      lines.push(`Nome: ${savedData.nome}`);
+      lines.push(`Data de Nascimento: ${savedData.dataNascimento}`);
+      lines.push(`Peso (kg): ${savedData.peso}`);
+      lines.push(`Contato: ${savedData.contato}`);
+      lines.push(`Contato de Emergência: ${savedData.contatoEmergencia}`);
+      lines.push("");
+      lines.push("Vacinação:");
+      if (savedData.vacinas && savedData.vacinas.length > 0) {
+        savedData.vacinas.forEach((vacina, index) => {
+          lines.push(`Vacina ${index+1}:`);
+          lines.push(`  Nome: ${vacina.nome}`);
+          lines.push(`  Data de Aplicação: ${vacina.dataAplicacao}`);
+          lines.push(`  Lote: ${vacina.lote}`);
+          lines.push(`  Observações: ${vacina.observacoes}`);
+        });
+      } else {
+        lines.push("Nenhuma vacina registrada.");
+      }
+      lines.push("");
+      lines.push("Doenças Crônicas e Alergias:");
+      lines.push(`Hipertensão: ${savedData.doenças.hipertensao ? 'Sim' : 'Não'}`);
+      lines.push(`Diabetes: ${savedData.doenças.diabetes ? 'Sim' : 'Não'}`);
+      lines.push(`Cardiopatias: ${savedData.doenças.cardiopatias ? 'Sim' : 'Não'}`);
+      lines.push(`Chagas: ${savedData.doenças.chagas ? 'Sim' : 'Não'}`);
+      lines.push(`Outras Doenças/Alergias: ${savedData.doenças.outrasDoencas}`);
+      lines.push("");
+      lines.push("Medicamentos em Uso:");
+      savedData.medicamentos.forEach((med, index) => {
+        lines.push(`Medicamento ${index+1}:`);
+        lines.push(`  Nome: ${med.nome}`);
+        lines.push(`  Dose: ${med.dose}`);
+        lines.push(`  Posologia: ${med.posologia}`);
+        lines.push(`  Horário: ${med.horario}`);
+      });
+      lines.push("");
+      lines.push("Mapeamento de PA e Glicemia:");
+      if (savedData.monitoramento && savedData.monitoramento.length > 0) {
+        savedData.monitoramento.forEach((measurement, index) => {
+          lines.push(`Aferição ${index+1} (${measurement.datetime}): PA: ${measurement.pa}, Glicemia: ${measurement.glicemia}`);
+        });
+      } else {
+        lines.push("Nenhuma aferição registrada.");
+      }
+      lines.push("");
+      lines.push("Recomendações/Anotações Médicas:");
+      lines.push(savedData.anotacoes);
+      
+      lines.forEach(line => {
+        if (y > 280) {
+          doc.addPage();
+          y = 10;
+        }
+        doc.text(line, 10, y);
+        y += 7;
+      });
+      
+      doc.save('dados_caderneta.pdf');
+    });
+
+    // Botão "Monitoramento" - exibe o modal para inserir uma nova aferição
+    document.getElementById('monitoramentoBtn').addEventListener('click', () => {
+      // Limpa os campos para nova aferição
+      document.getElementById('paMonitor').value = '';
+      document.getElementById('glicemiaMonitor').value = '';
+      document.getElementById('monitoramentoOverlay').style.display = 'block';
+      document.getElementById('monitoramentoScreen').style.display = 'block';
+    });
+
+    // Botão "Fechar" no modal de monitoramento
+    document.getElementById('closeMonitorBtn').addEventListener('click', () => {
+      document.getElementById('monitoramentoOverlay').style.display = 'none';
+      document.getElementById('monitoramentoScreen').style.display = 'none';
+    });
+
+    // Botão "Salvar Monitoramento" no modal
+    document.getElementById('saveMonitorBtn').addEventListener('click', () => {
+      const savedData = JSON.parse(localStorage.getItem('formData')) || {};
+      const measurement = {
+        pa: document.getElementById('paMonitor').value,
+        glicemia: document.getElementById('glicemiaMonitor').value,
+        datetime: new Date().toLocaleString('pt-BR')
+      };
+      if (!savedData.monitoramento) {
+        savedData.monitoramento = [];
+      }
+      savedData.monitoramento.push(measurement);
+      localStorage.setItem('formData', JSON.stringify(savedData));
+      const popup = document.getElementById('popup');
+      popup.textContent = "Monitoramento salvo com sucesso!";
+      popup.classList.add('show');
+      setTimeout(() => {
+        popup.classList.remove('show');
+        popup.textContent = "Dados salvos com sucesso!";
+      }, 3000);
+      document.getElementById('monitoramentoOverlay').style.display = 'none';
+      document.getElementById('monitoramentoScreen').style.display = 'none';
+      updateReviewScreen();
+    });
+
+    // Botão "Excluir todos os dados" - remove todos os dados salvos
+    document.getElementById('deleteAllBtn').addEventListener('click', () => {
+      if (confirm("Tem certeza que deseja excluir todos os dados salvos?")) {
+        localStorage.removeItem('formData');
+        alert("Todos os dados foram excluídos com sucesso.");
+        updateReviewScreen();
+      }
+    });
+
+    // Recuperar dados ao carregar a página (preenche o formulário, se houver dados salvos)
+    window.addEventListener('load', () => {
+      const savedData = JSON.parse(localStorage.getItem('formData'));
+      if (savedData) {
+        document.getElementById('nome').value = savedData.nome || '';
+        document.getElementById('dataNascimento').value = savedData.dataNascimento || '';
+        document.getElementById('peso').value = savedData.peso || '';
+        document.getElementById('contato').value = savedData.contato || '';
+        document.getElementById('contatoEmergencia').value = savedData.contatoEmergencia || '';
+        document.getElementById('hipertensao').checked = savedData.doenças?.hipertensao || false;
+        document.getElementById('diabetes').checked = savedData.doenças?.diabetes || false;
+        document.getElementById('cardiopatias').checked = savedData.doenças?.cardiopatias || false;
+        document.getElementById('chagas').checked = savedData.doenças?.chagas || false;
+        document.getElementById('outrasDoencas').value = savedData.doenças?.outrasDoencas || '';
+        if (savedData.medicamentos && savedData.medicamentos.length) {
+          savedData.medicamentos.forEach((medicamento, index) => {
+            if (index === 0) {
+              document.querySelector('input[name="nomeMedicamento[]"]').value = medicamento.nome || '';
+              document.querySelector('input[name="doseMedicamento[]"]').value = medicamento.dose || '';
+              document.querySelector('input[name="posologiaMedicamento[]"]').value = medicamento.posologia || '';
+              document.querySelector('input[name="horarioMedicamento[]"]').value = medicamento.horario || '';
+            } else {
+              const newBlock = document.createElement('div');
+              newBlock.classList.add('medicamento-form');
+              newBlock.innerHTML = `
+                <label>Nome do Medicamento:</label>
+                <input type="text" name="nomeMedicamento[]" value="${medicamento.nome}">
+                <label>Dose:</label>
+                <input type="text" name="doseMedicamento[]" value="${medicamento.dose}">
+                <label>Posologia:</label>
+                <input type="text" name="posologiaMedicamento[]" value="${medicamento.posologia}">
+                <label>Horário:</label>
+                <input type="time" name="horarioMedicamento[]" value="${medicamento.horario}">
+                <button type="button" class="delete-btn" onclick="deleteMedicamentoForm(this)">Excluir Medicamento</button>
+              `;
+              document.getElementById('medicamentosContainer').appendChild(newBlock);
+            }
+          });
+        }
+        if (savedData.vacinas && savedData.vacinas.length) {
+          savedData.vacinas.forEach((vacina, index) => {
+            if (index === 0) {
+              document.querySelector('.nomeVacina').value = vacina.nome || '';
+              document.querySelector('.dataAplicacao').value = vacina.dataAplicacao || '';
+              document.querySelector('.loteVacina').value = vacina.lote || '';
+              document.querySelector('.observacoesVacina').value = vacina.observacoes || '';
+            } else {
+              const newBlock = document.createElement('div');
+              newBlock.classList.add('vacina-form');
+              newBlock.innerHTML = `
+                <div class="form-row">
+                  <label for="nomeVacina">Nome da Vacina:</label>
+                  <input type="text" class="nomeVacina" name="nomeVacina[]" value="${vacina.nome}">
+                </div>
+                <div class="form-row">
+                  <label for="dataAplicacao">Data de Aplicação:</label>
+                  <input type="date" class="dataAplicacao" name="dataAplicacao[]" value="${vacina.dataAplicacao}">
+                </div>
+                <div class="form-row">
+                  <label for="loteVacina">Lote:</label>
+                  <input type="text" class="loteVacina" name="loteVacina[]" value="${vacina.lote}">
+                </div>
+                <div class="form-row">
+                  <label for="observacoesVacina">Observações:</label>
+                  <textarea class="observacoesVacina" name="observacoesVacina[]">${vacina.observacoes}</textarea>
+                </div>
+                <button type="button" class="delete-btn" onclick="deleteVacinaForm(this)">Excluir Vacina</button>
+              `;
+              document.getElementById('vacinasContainer').appendChild(newBlock);
+            }
+          });
+        }
+        // Não preenche os campos do modal de monitoramento, pois serão usados para nova aferição
+        document.getElementById('anotacoes').value = savedData.anotacoes || '';
+
+        // Direciona automaticamente para a tela de revisão se houver dados salvos
+        document.getElementById('homeScreen').style.display = 'none';
+        document.getElementById('editScreen').style.display = 'none';
+        document.getElementById('reviewScreen').style.display = 'block';
+        updateReviewScreen();
+      }
+    });
+
+    // Botão "Iniciar" na tela inicial
+    document.getElementById('startBtn').addEventListener('click', () => {
+      document.getElementById('homeScreen').style.display = 'none';
+      document.getElementById('editScreen').style.display = 'block';
+      // Entrar em tela cheia
+      if (document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen();
+      } else if (document.documentElement.mozRequestFullScreen) { // Firefox
+        document.documentElement.mozRequestFullScreen();
+      } else if (document.documentElement.webkitRequestFullscreen) { // Chrome, Safari e Opera
+        document.documentElement.webkitRequestFullscreen();
+      } else if (document.documentElement.msRequestFullscreen) { // IE/Edge
+        document.documentElement.msRequestFullscreen();
+      }
+    });
   </script>
 </body>
 </html>
